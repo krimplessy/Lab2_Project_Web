@@ -1,0 +1,178 @@
+DROP TABLE IF EXISTS specialization;
+CREATE TABLE specialization (
+    specialization_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    specialization_name VARCHAR(30)
+);
+
+DROP TABLE IF EXISTS client;
+CREATE TABLE client (
+    client_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_full_name VARCHAR(60),
+    phone_number VARCHAR(11)
+);
+
+DROP TABLE IF EXISTS master;
+CREATE TABLE master (
+    master_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    master_full_name VARCHAR(60)
+);
+
+DROP TABLE IF EXISTS service;
+CREATE TABLE service (
+    service_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    service_name VARCHAR(40),
+    specialization_id INT,
+    price INTEGER,
+    FOREIGN KEY (specialization_id) REFERENCES specialization (specialization_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS timetable;
+CREATE TABLE timetable (
+    timetable_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    master_id INT,
+    weekday INTEGER,
+    start_time TIME,
+    finish_time TIME,
+    FOREIGN KEY (master_id) REFERENCES master (master_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS timetable_date;
+CREATE TABLE timetable_date (
+    timetable_date_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timetable_id INT,
+    record_date DATE,
+    FOREIGN KEY (timetable_id) REFERENCES timetable (timetable_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS record;
+CREATE TABLE record (
+    record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timetable_date_id INT,
+    client_id INT,
+    service_id INT,
+    record_time TIME,
+    FOREIGN KEY (client_id) REFERENCES client (client_id) ON DELETE CASCADE,
+    FOREIGN KEY (service_id) REFERENCES service (service_id) ON DELETE CASCADE,
+    FOREIGN KEY (timetable_date_id) REFERENCES timetable_date (timetable_date_id) ON DELETE CASCADE
+);
+
+INSERT INTO specialization (specialization_name) VALUES
+('Волосы'),
+('Макияж'),
+('Маникюр'),
+('Брови'),
+('Губы');
+
+INSERT INTO client (client_full_name, phone_number) VALUES
+('Новикова Вилора Леонидовна', '81686411942'),
+('Виноградов Демьян Викторович', '83140102745'),
+('Смирнова Версавия Аристарховна', '85957810084'),
+('Хохлова Олеся Артёмовна', '81856099633'),
+('Андреева Жасмин Наумовна', '85757167700'),
+('Тихонова Валерия Георгиевна', '81015409642'),
+('Щербакова Габриэлла Владимировна', '88663305921'),
+('Семёнов Исаак Юрьевич', '87883554506'),
+('Мартынов Игнатий Даниилович', '81102177365'),
+('Кондратьева Kристина Витальевна', '83933425693'),
+('Журавлёва Изабелла Донатовна', '87792152814'),
+('Самойлова Зоя Эдуардовна', '82710447040'),
+('Сафонова Эдилия Всеволодовна', '88341900248'),
+('Филатова Берта Альбертовна', '84119491894'),
+('Никонова Марта Гордеевна', '81406110109'),
+('Комиссаров Ян Артёмович', '84045060964'),
+('Лазарева Амелия Ростиславовна', '87347437898'),
+('Смирнова Лика Иосифовна', '80441562417'),
+('Доронина Валерия Дамировна', '86263259657'),
+('Ильина Эвелина Лукьяновна', '89542232162');
+
+INSERT INTO master (master_full_name) VALUES
+('Сергеева Регина Робертовна'),
+('Ширяева Роксана Валерьевна'),
+('Суханова Диана Филатовна'),
+('Галкин Евдоким Николаевич'),
+('Колобов Анатолий Данилович'),
+('Лихачева Маргарита Семеновна'),
+('Воронцова Владислава Сергеевна'),
+('Гордеев Виталий Русланович'),
+('Ефимова Ярослава Денисовна'),
+('Горбачева София Ефимовна');
+
+INSERT INTO service (service_name, specialization_id, price) VALUES
+('Срижка мужская', 1, '600'),
+('Стрижка женская', 1, '1000'),
+('Укладка', 1, '1200'),
+('Косы', 1, '1600'),
+('Окрашивание', 1, '2500'),
+('Мелирование', 1, '1600'),
+('Кератиновое выпрямление', 1, '3800'),
+('Вечерний макияж', 2, '2500'),
+('Дневной макияж', 2, '1600'),
+('Свадебный макияж', 2, '3000'),
+('Креативный макияж', 2, '3000'),
+('Макияж для фотосессии', 2, '2000'),
+('Гигиенический маникюр', 3, '1200'),
+('Аппаратный маникюр', 3, '2100'),
+('Французский маникюр', 3, '2400'),
+('Мужской маникюр', 3, '2500'),
+('Парафинотерапия', 3, '1400'),
+('Коррекция бровей', 4, '900'),
+('Окрашивание бровей', 4, '1200'),
+('Перманент бровей', 4, '3000'),
+('Увеличение губ', 5, '9800'),
+('Перманент губ', 5, '5000');
+
+INSERT INTO timetable (master_id, weekday, start_time, finish_time) VALUES
+(1, 1, '10:00:00', '21:00:00'),
+(1, 2, '10:00:00', '16:00:00'),
+(1, 3, '16:00:00', '21:00:00'),
+(2, 4, '10:00:00', '16:00:00'),
+(2, 6, '10:00:00', '16:00:00'),
+(2, 7, '10:00:00', '21:00:00'),
+(3, 2, '10:00:00', '21:00:00'),
+(3, 4, '10:00:00', '21:00:00'),
+(4, 5, '10:00:00', '21:00:00'),
+(4, 6, '16:00:00', '21:00:00'),
+(4, 7, '10:00:00', '16:00:00'),
+(5, 2, '16:00:00', '21:00:00'),
+(5, 4, '16:00:00', '21:00:00'),
+(6, 1, '10:00:00', '16:00:00'),
+(6, 6, '10:00:00', '21:00:00'),
+(7, 1, '16:00:00', '21:00:00'),
+(7, 3, '10:00:00', '16:00:00'),
+(7, 7, '10:00:00', '21:00:00'),
+(8, 3, '10:00:00', '21:00:00'),
+(8, 6, '10:00:00', '21:00:00'),
+(9, 1, '16:00:00', '21:00:00'),
+(9, 3, '16:00:00', '21:00:00'),
+(9, 5, '10:00:00', '21:00:00'),
+(10, 2, '10:00:00', '16:00:00'),
+(10, 4, '10:00:00', '16:00:00'),
+(10, 5, '10:00:00', '21:00:00');
+
+INSERT INTO timetable_date(timetable_id, record_date)
+WITH RECURSIVE create_date(cur_date)
+	AS (
+	SELECT DATE('now')
+	UNION ALL
+	SELECT DATE(cur_date, '+1 day')
+	FROM create_date
+	WHERE cur_date < DATE('now', 'start of month', '+1 month','-1 day')
+ )
+SELECT timetable_id, cur_date
+FROM timetable
+JOIN create_date ON weekday = strftime('%w', cur_date);
+
+INSERT INTO record(timetable_date_id, record_time)
+WITH RECURSIVE create_time(cur_time)
+	AS (
+	SELECT '10:00:00'
+	UNION ALL
+	SELECT TIME(cur_time, '+60 minutes')
+	FROM create_time
+	WHERE cur_time < '21:00:00'
+ )
+SELECT timetable_date_id, cur_time
+FROM create_time, timetable
+JOIN timetable_date USING (timetable_id)
+WHERE cur_time BETWEEN start_time and TIME(finish_time,'-60 minutes');
+
